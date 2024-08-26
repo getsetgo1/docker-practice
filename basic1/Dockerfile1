@@ -1,0 +1,22 @@
+# 별다른 설정 없이도 경량화 리눅스(alpine) 설치
+# 컨테이너 내에서 사용할 java 설치
+FROM openjdk:11
+
+# 작업 디렉토리 설정
+WORKDIR /app
+
+# 로컬 host에 HelloWorld1.java 파일을 컨테이너의 /app 폴더로 복사
+COPY HelloWorld1.java /app
+
+RUN javac HelloWorld1.java
+
+# 마지막 실행 작업 시에는 일반적으로 배열 형식의 명령문 사용
+# shell 실행을 위해서 배열로 넣는 것
+CMD ["java", "HelloWorld1"]
+
+# 도커 이미지(일종의 압축 파일) 생성 -> 이거 많이 사용되니까 외워!
+# 도커파일경로가 현재 위치이고, 파일명이 Dockerfile이면 " -f 도커파일경로 " 옵션 생략 가능
+# docker build -t 이미지명:태그명(일반적으로 버전이 들어감, 아무거나 넣으면 됨) -f 도커파일경로 빌드컨텍스트위치
+# 도커 파일
+
+
