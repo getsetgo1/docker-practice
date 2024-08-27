@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  my-db:
+    image: mariadb
+    environment:
+      - MARIADB_ROOT_PASSWORD=1234
+      - MARIADB_DATABASE=ordersystem
+    ports:
+#      DB랑 redis 한번에 실행
+#      workbench로 3400으로 접속해야겠죠?
+      - "3400:3306"
+  my-redis:
+    image: redis
+    ports:
+      - "6400:6379"
+  order-be:
+    build:
+      context: ./order-system
+      dockerfile: Dockerfile
+    restart: on-failure:10
+    ports:
+      - "8089:8089"
+    depends_on:
+      - my-db
+      - my-redis
+#    볼륨 설정하는 거 좋음 이번 실습에서는 넘어감
+    environment:
+#      덮어쓰는 것 다른 거 yml 보면 redis localhost로 되어있는데 그걸 my-redis로 해야하는 거잖아
+      - SPRING_DATASOURCE_URL=jdbc:mariadb://my-db:3306/ordersystem
+      - SPRING_REDIS_HOST=my-redis
+  order-fe:
+    build:
+      context: ./ordersystem_frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:8081"

@@ -14,6 +14,7 @@ COPY build.gradle .
 COPY settings.gradle .
 
 #  실행권한 없다고 에러 뜨는 경우 많음
+RUN chmod 777 gradlew
 RUN ./gradlew bootJar
 
 # 그냥 첫번째것만 하면 용량이 너무 크니까 두번째 스테이지에서는 jar 파일만 받는 것
@@ -27,7 +28,7 @@ COPY --from=stage1 /app/build/libs/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
 # docker 컨테이너 내에서 밖의 전체 host를 지칭하는 도메인 : host.docker.internal
-# docker run -d -p 8081:8080 -e SPRING_DATASOURCE_URL=jdbc:mariadb://host.docker.internal:3306/board spring_test:latest
-
+# docker run -d -p 8089:8080 -e SPRING_DATASOURCE_URL=jdbc:mariadb://host.docker.internal:3306/board ordersystem:latest# docker run -d -p 8089:8080 -e SPRING_DATASOURCE_URL=jdbc:mariadb://host.docker.internal:3306/board ordersystem:latest
+# docker run -d -p 8089:8080 -e SPRING_DATASOURCE_URL=jdbc:mariadb://host.docker.internal:3306/ordersystem hohey/ordersystem:latest
 # docker 컨테이너 실행 시에 볼륨을 설정할 때에는 -v 옵션 사용
 # docker run -d -p 8081:8080 -e SPRING_DATASOURCE_URL=jdbc:mariadb://host.docker.internal:3306/board -v C:\Users\Playdata\Desktop\tmp_logs:/app/logs  spring_test:latest
